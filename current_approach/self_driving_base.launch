@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="only_line_follow"    default="false"/>
+    <include file="$(find hiwonder_peripherals)/launch/depth_cam.launch"/>
+
+    <arg name="node_name" default="yolov5" />
+    <rosparam param="/$(arg node_name)/classes">['green_light', 'no_left_turn', 'no_light', 'no_right_turn', 'parking', 'red_light', 'speed_limit_5', 'speed_limit_lift', 'stop', 'turn_right', 'yellow_light']</rosparam>
+    <rosparam file="$(find hiwonder_example)/config/yolov5_bridge.yaml"   command="load"/>
+    <node unless="$(arg only_line_follow)" pkg="hiwonder_example" type="yolov5_node.py" name="$(arg node_name)" output="screen">
+        <param name="use_depth_cam" value="true"/>
+        <param name="engine"        value="best.engine"/>
+        <param name="lib"           value="libmyplugins.so"/>
+        <param name="conf_thresh"   value="0.8"/>
+    </node>
+</launch>
+
